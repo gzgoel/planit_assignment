@@ -1,0 +1,35 @@
+package JupitorToys.pageobjects;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+import JupitorToys.abstractcomponents.AbstractComponents;
+
+public class ContactForm extends AbstractComponents {
+	
+	WebDriver driver;
+	
+	public ContactForm(WebDriver driver) {
+			super(driver);
+			this.driver=driver;
+			PageFactory.initElements(driver, this);
+	}
+	
+	@FindBy(css=".btn-contact")
+	WebElement submitbtn;
+	
+	@FindBy(xpath="//span[@id='forename-err']")
+	WebElement fornameerrormessage;
+	
+	@FindBy(xpath="//span[@id='email-err']")
+	WebElement emailerrormessage;
+	
+	public void submitbtnclick() {
+		
+		submitbtn.click();
+	}
+
+}

@@ -1,0 +1,22 @@
+package JupitorToys.abstractcomponents;
+
+import java.time.Duration;
+import java.util.NoSuchElementException;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+
+public class AbstractComponents {
+
+	WebDriver driver;
+	
+	
+	public void waitforelementtoappear() {
+		Wait<WebDriver> wait=new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(30))
+				.pollingEvery(Duration.ofSeconds(3)).ignoring(NoSuchElementException.class);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@class='btn-contact btn btn-primary']")));
+	}
+}

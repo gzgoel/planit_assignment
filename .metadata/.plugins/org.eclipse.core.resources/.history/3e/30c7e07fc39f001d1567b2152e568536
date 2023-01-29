@@ -1,0 +1,18 @@
+package JupitorToys.pageobjects;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
+
+public class ContactForm {
+	
+	WebDriver driver;
+	
+	public ContactForm(WebDriver driver) {
+		
+			this.driver=driver;
+			PageFactory.initElements(driver, this);
+	}
+	
+	
+
+}

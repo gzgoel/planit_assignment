@@ -1,0 +1,91 @@
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class JupitorAppTest {
+
+
+	@Test
+	public void TestCase1() {
+		
+		WebDriverManager.chromedriver().setup();
+		WebDriver driver = new ChromeDriver();
+		driver.get("https://jupiter.cloud.planittesting.com/#/");
+	
+		driver.findElement(By.xpath("//a[normalize-space()='Contact']")).click();
+		
+
+		
+		//Wait until submit button is visible
+		Wait<WebDriver> wait=new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(30))
+				.pollingEvery(Duration.ofSeconds(3)).ignoring(NoSuchElementException.class);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@class='btn-contact btn btn-primary']")));
+		driver.findElement(By.xpath("//a[@class='btn-contact btn btn-primary']")).click();
+		
+		//Validating for name error message
+		String Forenameerroemessage=driver.findElement(By.xpath("//span[@id='forename-err']")).getText();
+		Assert.assertEquals(Forenameerroemessage, "Forename is required");
+		
+		//Validating Email error message
+		String emailerroemessage=driver.findElement(By.xpath("//span[@id='email-err']")).getText();
+		Assert.assertEquals(emailerroemessage, "Email is required");
+	
+		
+		//Validating Message error message
+		String Messageerroemessage=driver.findElement(By.xpath("//span[@id='message-err']")).getText();
+		Assert.assertEquals(Messageerroemessage, "Message is required");
+		
+		//Validating successful test upon entering mandatory fields
+		
+		driver.findElement(By.xpath("//input[@id='forename']")).sendKeys("John Doe");
+		driver.findElement(By.xpath("//input[@id='email']")).sendKeys("john.doe@Planit.com");
+		driver.findElement(By.xpath("//textarea[@id='message']")).sendKeys("Hey there");
+		driver.findElement(By.xpath("//a[@class='btn-contact btn btn-primary']")).click();
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='modal-footer']")));
+		
+		//validate unsuccessful messages are gone
+		
+		if ( driver.getPageSource().contains("Forename is required")){
+			Assert.assertEquals("Forename message is present", "forename message should not have been trigerred");
+	      }
+		
+		if ( driver.getPageSource().contains("Email is required")){
+			Assert.assertEquals("Email message is present", "Email message should not have been trigerred");
+	      }
+		
+		if ( driver.getPageSource().contains("Message is required")){
+			Assert.assertEquals("Message error message is present", "Message error message should not have been trigerred");
+	      }
+	
+		
+		//validating successful message
+		String successmessage=driver.findElement(By.xpath("//div[@class='alert alert-success']")).getText();
+		Assert.assertTrue(successmessage.contains("we appreciate your feedback")); 
+	
+	
+	
+	//starting to shop
+		driver.findElement(By.cssSelector(".brand")).click();
+		driver.findElement(By.cssSelector(".btn-large")).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".products")));
+		List<WebElement> products=driver.findElements(By.cssSelector(".products"));
+		WebElement myproduct= products.stream().filter(product->product.findElement(By.cssSelector(".product-title").equals("Funny Cow")).findFirst().orElse(null);
+		
+		myproduct.findElement(By.cssSelector(".btn-success:last-of-type")).click();
+	}
+}

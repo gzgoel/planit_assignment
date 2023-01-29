@@ -1,0 +1,5 @@
+package JupitorToys.pageobjects;
+
+public class CartPage {
+
+}

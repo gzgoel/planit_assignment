@@ -1,0 +1,129 @@
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
+import java.time.Duration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Stream;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import JupitorToys.pageobjects.ContactForm;
+import JupitorToys.pageobjects.LandingPage;
+import JupitorToys.pageobjects.ProductSelectionPage;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+public class JupitorAppTest {
+
+
+
+	@Test
+	public void TestCase1() {
+		
+		WebDriverManager.chromedriver().setup();
+		WebDriver driver = new ChromeDriver();
+		driver.get("https://jupiter.cloud.planittesting.com/#/");
+		
+		LandingPage landingpage=new LandingPage(driver);
+		landingpage.gotoContact();
+		
+		ProductSelectionPage PS=new ProductSelectionPage(driver);
+		PS.waitforelementtoappear(By.xpath("//a[@class='btn-contact btn btn-primary']"));
+	
+		
+		By submitbtn = By.cssSelector(".btn-contact ");
+		ContactForm cf=new ContactForm(driver);
+		cf.waitforelementtoappear(submitbtn);
+		cf.submitbtnclick();
+		
+		
+		//Validating for name error message
+		String Forenameerroemessage = cf.validatenameerror();
+		Assert.assertEquals(Forenameerroemessage, "Forename is required");
+		
+		//Validating Email error message
+		String emailerroemessage=cf.validateemailerrorm();
+		Assert.assertEquals(emailerroemessage, "Email is required");
+	
+		
+		//Validating Message error message
+		String Messageerroemessage=cf.messageerror();
+		Assert.assertEquals(Messageerroemessage, "Message is required");
+		
+		//Validating successful test upon entering mandatory fields
+
+		cf.fillform("JohnDoe", "John.doe@Planit.com", "Hey there");
+		
+		
+		By feedbackbar=By.cssSelector(".popup");
+		cf.waituntilelementinvisibility(feedbackbar);
+	
+		//validate unsuccessful messages are gone
+		
+		if ( driver.getPageSource().contains("Forename is required")){
+			Assert.assertEquals("Forename message is present", "forename message should not have been trigerred");
+	      }
+		
+		if ( driver.getPageSource().contains("Email is required")){
+			Assert.assertEquals("Email message is present", "Email message should not have been trigerred");
+	      }
+		
+		if ( driver.getPageSource().contains("Message is required")){
+			Assert.assertEquals("Message error message is present", "Message error message should not have been trigerred");
+	      }
+	
+		
+		//validating successful message
+		String successmessage=driver.findElement(By.xpath("//div[@class='alert alert-success']")).getText();
+		Assert.assertTrue(successmessage.contains("we appreciate your feedback")); 
+	
+	
+	
+	//starting to shop
+	//	driver.findElement(By.cssSelector(".brand")).click();
+	//	driver.findElement(By.cssSelector(".btn-large")).click();
+	landingpage.gotohomepage();
+	landingpage.startshopping();
+	
+
+	System.out.println("TBD-> I am loaded");
+		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".products")));
+		List<WebElement> products=driver.findElements(By.cssSelector(".product"));
+		System.out.println(products.size());
+		WebElement myproduct= products.stream().filter(product->product.findElement(By.cssSelector(".product-title")).getText().equals("Funny Cow")).findFirst().orElse(null);
+		
+		myproduct.findElement(By.cssSelector(".btn-success:last-of-type")).click();
+		
+		//move to cart
+		driver.findElement(By.cssSelector(".icon-shopping-cart")).click();
+		
+	//	wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".cart-item")));
+		
+		//verify if correct quantity was added
+		List<WebElement> CartProducts = driver.findElements(By.cssSelector(".cart-item"));
+		for(WebElement we: CartProducts) {
+			System.out.println(we.findElement(By.cssSelector(".ng-valid-number")).getAttribute("value"));
+			String cartitem=we.findElement(By.cssSelector(".ng-binding:first-of-type")).getText();
+			if(cartitem.equalsIgnoreCase("Funny Cow")) {
+				String value=we.findElement(By.cssSelector(".ng-valid-number")).getAttribute("value");
+				System.out.println("Total cart items"+value);
+				Assert.assertEquals("1", value);
+			}
+			
+		}
+		
+		
+
+		
+	}
+}

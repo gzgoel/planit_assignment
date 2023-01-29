@@ -1,0 +1,15 @@
+package JupitorToys.pageobjects;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class LandingPage {
+
+	WebDriver driver;
+	public LandingPage(WebDriver driver) {
+		this.driver = driver;
+		
+	}
+	WebElement contactlink = driver.findElement(By.xpath("//a[normalize-space()='Contact']"));
+}

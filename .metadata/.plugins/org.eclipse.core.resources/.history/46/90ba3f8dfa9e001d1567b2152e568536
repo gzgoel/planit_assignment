@@ -1,0 +1,17 @@
+package JupitorToys.pageobjects;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
+
+import JupitorToys.abstractcomponents.AbstractComponents;
+
+public class ProductSelectionPage extends AbstractComponents {
+
+	public ProductSelectionPage(WebDriver driver) {
+		super(driver);
+		PageFactory.initElements(driver, this);
+	}
+	
+	
+
+}

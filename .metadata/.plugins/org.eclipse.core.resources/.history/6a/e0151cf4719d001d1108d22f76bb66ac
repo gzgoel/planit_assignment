@@ -1,0 +1,61 @@
+import java.time.Duration;
+import java.util.NoSuchElementException;
+
+import org.testng.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+
+
+public class JupitorToysMain {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.setProperty("webdriver.chrome.driver", "/Users/gaurav/Build/Repos/PlanitAssignment/Resources/chromedriver");
+		WebDriver driver = new ChromeDriver();
+		driver.get("https://jupiter.cloud.planittesting.com/#/");
+		driver.findElement(By.xpath("//a[normalize-space()='Contact']")).click();
+		
+
+		
+		//Wait until submit button is visible
+		Wait<WebDriver> wait=new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(30))
+				.pollingEvery(Duration.ofSeconds(3)).ignoring(NoSuchElementException.class);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[@class='btn-contact btn btn-primary']")));
+		driver.findElement(By.xpath("//a[@class='btn-contact btn btn-primary']")).click();
+		
+		
+		//Validating forename error message
+		String Forenameerroemessage=driver.findElement(By.xpath("//span[@id='forename-err']")).getText();
+		Assert.assertEquals(Forenameerroemessage, "Forename is required");
+		
+		//Validating Email error message
+		String emailerroemessage=driver.findElement(By.xpath("//span[@id='email-err']")).getText();
+		Assert.assertEquals(emailerroemessage, "Email is required");
+	
+		
+		//Validating Message error message
+		String Messageerroemessage=driver.findElement(By.xpath("//span[@id='email-err']")).getText();
+		Assert.assertEquals(Messageerroemessage, "Email is required");
+		
+		//Validating successful test upon entering mandatory fields
+		
+		driver.findElement(By.xpath("//input[@id='forename']")).sendKeys("John Doe");
+		driver.findElement(By.xpath("//input[@id='email']")).sendKeys("john.doe@Planit.com");
+		driver.findElement(By.xpath("//textarea[@id='message']")).sendKeys("Hey there");
+		driver.findElement(By.xpath("//a[@class='btn-contact btn btn-primary']")).click();
+	
+		
+		//driver.close();
+		
+		
+		
+	}
+
+}

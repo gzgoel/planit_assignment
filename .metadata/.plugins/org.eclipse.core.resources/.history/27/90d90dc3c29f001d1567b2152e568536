@@ -1,0 +1,14 @@
+package JupitorToys.pageobjects;
+
+import org.openqa.selenium.WebDriver;
+
+public class ContactForm {
+	
+	WebDriver driver;
+	
+	public ContactForm(WebDriver driver) {
+		
+		
+	}
+
+}

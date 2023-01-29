@@ -1,0 +1,11 @@
+package JupitorToys.abstractcomponents;
+
+public class AbstractComponents {
+
+	
+	
+	
+	public void waitforelementtoappear() {
+		
+	}
+}

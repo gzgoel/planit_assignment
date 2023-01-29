@@ -1,0 +1,14 @@
+package JupitorToys.pageobjects;
+
+import org.openqa.selenium.WebDriver;
+
+import JupitorToys.abstractcomponents.AbstractComponents;
+
+public class ProductSelectionPage extends AbstractComponents {
+
+	public ProductSelectionPage(WebDriver driver) {
+		super(driver);
+		// TODO Auto-generated constructor stub
+	}
+
+}
